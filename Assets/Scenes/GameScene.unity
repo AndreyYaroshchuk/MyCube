@@ -1644,8 +1644,20 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 820664220, guid: d9ce45b6decb1724584923dfb9761356, type: 3}
+      propertyPath: Loop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 820664220, guid: d9ce45b6decb1724584923dfb9761356, type: 3}
       propertyPath: MinDistance
       value: 0.7272021
+      objectReference: {fileID: 0}
+    - target: {fileID: 820664220, guid: d9ce45b6decb1724584923dfb9761356, type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 02fcc60dd8f37a84481e5ad929a25d11, type: 3}
+    - target: {fileID: 820664220, guid: d9ce45b6decb1724584923dfb9761356, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1098216935, guid: d9ce45b6decb1724584923dfb9761356, type: 3}
       propertyPath: _camera
