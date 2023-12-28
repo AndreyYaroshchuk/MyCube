@@ -4,10 +4,13 @@ using TMPro;
 //using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
 public class HUD : MonoBehaviour
 {
+    private const string SAVE_FILE_SCORE = "saveFileScore";
+
     private float timerPaused = 0f;
     private float timerPlay = 1f;
     private float transformPosiyionToStartPlayer;
@@ -21,6 +24,9 @@ public class HUD : MonoBehaviour
     [SerializeField] Button buttonRestart;
     [SerializeField] Button buttonStart;
 
+    private int score;
+    private int scoreRes;
+
     private void Awake()
     {
         ShowMainMenuUI();
@@ -32,36 +38,52 @@ public class HUD : MonoBehaviour
         gameOver.OnGameOver += GameOver_OnGameOver;
         transformPosiyionToStartPlayer = Player.Instance.gameObject.transform.position.z;
         ButtonStart();
+        score = PlayerPrefs.GetInt(SAVE_FILE_SCORE);
     }
     private void Update()
     {
-        Score(); 
+        Score("SCORE: ",false);
     }
     private void GameOver_OnGameOver(object sender, System.EventArgs e)
     {
         ShowGameOverUI();
         HideTouchpadUI();
-        Score();
+        Score("RECORD: ", true);
+
         buttonRestart.onClick.AddListener(() =>
         {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         });
     }
     private void ButtonStart()
     {
         buttonStart.onClick.AddListener(() =>
         {
-            Debug.Log("Нажал кнопку");
             HideMainMenuUI();
             ShowTouchpadUI();
         });
     }
-    private void Score()
+    private void Score(string name, bool saveFile)
     {
-        int score = (int)Player.Instance.transform.position.z - (int)transformPosiyionToStartPlayer;
-        scoreTextGameOverUI.text = $"SCORE: {score.ToString()}";
-        scoreText.text = $"SCORE: {score.ToString()}";
+        scoreRes = (int)Player.Instance.transform.position.z - (int)transformPosiyionToStartPlayer;
+        if (scoreRes >= score)
+        {
+            scoreTextGameOverUI.text = name + scoreRes.ToString();
+            scoreText.text = name + scoreRes.ToString();
+            if (saveFile == true)
+            {
+                PlayerPrefs.SetInt(SAVE_FILE_SCORE, scoreRes);
+                PlayerPrefs.Save();
+            };
+        }
+        else
+        {
+            scoreTextGameOverUI.text = name + score.ToString();
+            scoreText.text = name + score.ToString();
+        }
+
     }
+
     private void ShowMainMenuUI()
     {
         mainMenuUI.SetActive(true);
@@ -75,8 +97,8 @@ public class HUD : MonoBehaviour
     private void ShowGameOverUI()
     {
         gameOverUI.SetActive(true);
-        Invoke("PausedGame",2f);
-    
+        Invoke("PausedGame", 2f);
+
     }
     private void HideGameOverUI()
     {
